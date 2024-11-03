@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineShop.Domain.Entities
+namespace OnlineShop.Application.DTO
 {
-    public class Product
+    public class ProductDTO
     {
         public int ProductId { get; set; }
         public string Name { get; set; }
@@ -14,11 +14,5 @@ namespace OnlineShop.Domain.Entities
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public int CategoryId { get; set; }
-        public string ImageUrl { get; set; }
-
-        public Category Category { get; set; }
-        public ICollection<Review> Reviews { get; set; }
-        public ICollection<OrderItem> OrderItems { get; set; }
     }
-
 }
