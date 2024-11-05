@@ -1,10 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using OnlineShop.Domain.Entities;
+using OnlineShop.Application.Skus.DTO;
 
-namespace OnlineShop.Domain.Entities
+namespace OnlineShop.Application.Products.DTO
 {
-    public class Product
+    public class ProductDTO
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -17,9 +23,6 @@ namespace OnlineShop.Domain.Entities
         public string ProductAttrs { get; set; }  // JSON attributes
         public bool IsDeleted { get; set; } = false;
         public int Sort { get; set; } = 0;
-        public DateTime CreateTime { get; set; } = DateTime.Now;
-        public DateTime UpdateTime { get; set; } = DateTime.Now;
-        // Navigation property for related SKUs
-        public ICollection<Sku> Skus { get; set; }
+        public ICollection<SkuDTO> Skus { get; set; }
     }
 }
