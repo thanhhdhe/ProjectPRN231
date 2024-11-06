@@ -1,4 +1,5 @@
-﻿using OnlineShop.Domain.Entities;
+﻿using OnlineShop.Domain.Constants;
+using OnlineShop.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace OnlineShop.Domain.Repositories
         Task<long> AddAsync(Product productEntity);
         Task<IEnumerable<Product>> GetAllAsync();
         Task<Product> GetByIdAsync(long id);
+        Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase, int pageSize, int pageNumber, string? sortBy, SortDirection sortDirection);
     }
 }

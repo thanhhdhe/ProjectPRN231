@@ -1,25 +1,37 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OnlineShop.Domain.Entities
 {
-    public class Product
+    public partial class Product
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long ProductId { get; set; }
-        [MaxLength(64)]
-        public string ProductName { get; set; }
-        [MaxLength(256)]
-        public string ProductDesc { get; set; }
-        public byte ProductStatus { get; set; } = 0;  // 0: out of stock, 1: in stock
-        public string ProductAttrs { get; set; }  // JSON attributes
-        public bool IsDeleted { get; set; } = false;
-        public int Sort { get; set; } = 0;
-        public DateTime CreateTime { get; set; } = DateTime.Now;
-        public DateTime UpdateTime { get; set; } = DateTime.Now;
-        // Navigation property for related SKUs
-        public ICollection<Sku> Skus { get; set; }
+        public Product()
+        {
+            Comments = new HashSet<Comment>();
+            ProductAttributes = new HashSet<ProductAttribute>();
+            Skus = new HashSet<Sku>();
+        }
+
+        public int ProductId { get; set; }
+        public int? CategoryId { get; set; }
+        public int? BrandId { get; set; }
+        public int? GroupId { get; set; }
+        public string ProductName { get; set; } = null!;
+        public string? ProductDesc { get; set; }
+        public byte? ProductStatus { get; set; }
+        public bool? IsDeleted { get; set; }
+        public int? Sort { get; set; }
+        public string? ThumbnailUrl { get; set; }
+        public string? Slug { get; set; }
+        public DateTime? CreateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
+        public string? Status { get; set; }
+
+        public virtual Brand? Brand { get; set; }
+        public virtual Category? Category { get; set; }
+        public virtual Group? Group { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<ProductAttribute> ProductAttributes { get; set; }
+        public virtual ICollection<Sku> Skus { get; set; }
     }
 }

@@ -19,9 +19,9 @@ namespace OnlineShop.API.Controllers
             _mediator = mediator;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] GetAllProductQuery query)
         {
-            var products = await _mediator.Send(new GetAllProductQuery());
+            var products = await _mediator.Send(query);
             return Ok(products);
         }
 

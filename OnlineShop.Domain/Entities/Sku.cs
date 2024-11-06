@@ -1,47 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop.Domain.Entities
 {
-    public class Sku
+    public partial class Sku
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public Sku()
+        {
+            OrderDetails = new HashSet<OrderDetail>();
+            SkuImages = new HashSet<SkuImage>();
+            Variants = new HashSet<Variant>();
+            Warranties = new HashSet<Warranty>();
+        }
 
-        [MaxLength(32)]
-        public string SkuNo { get; set; } = string.Empty;
+        public int SkuId { get; set; }
+        public string SkuNo { get; set; } = null!;
+        public string? SkuName { get; set; }
+        public string? SkuDescription { get; set; }
+        public byte? SkuType { get; set; }
+        public byte? Status { get; set; }
+        public int? Sort { get; set; }
+        public int? SkuStock { get; set; }
+        public decimal OriginalPrice { get; set; }
+        public decimal? PromotionalPrice { get; set; }
+        public int ProductId { get; set; }
 
-        [MaxLength(50)]
-        public string SkuName { get; set; }
-
-        [MaxLength(256)]
-        public string SkuDescription { get; set; }
-
-        public byte SkuType { get; set; }
-
-        public byte Status { get; set; }
-
-        public int Sort { get; set; } = 0;
-
-        public int SkuStock { get; set; } = 0;
-
-        [Column(TypeName = "decimal(8, 2)")]
-        public decimal SkuPrice { get; set; }
-
-        public DateTime CreateTime { get; set; } = DateTime.Now;
-
-        public DateTime UpdateTime { get; set; } = DateTime.Now;
-
-        // Foreign key to Product
-        public long ProductId { get; set; }
-
-        // Navigation property to Product
-        public Product Product { get; set; }
+        public virtual Product Product { get; set; } = null!;
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<SkuImage> SkuImages { get; set; }
+        public virtual ICollection<Variant> Variants { get; set; }
+        public virtual ICollection<Warranty> Warranties { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using OnlineShop.Application.Common;
 using OnlineShop.Application.Products.DTO;
 using OnlineShop.Domain.Repositories;
 using System;
@@ -27,8 +28,13 @@ namespace OnlineShop.Application.Products.Queries.GetAllProduct
         public async Task<IEnumerable<ProductDTO>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Getting all products");
-            var products = await _productRepository.GetAllAsync();
+            var (products, totalCount) = await _productRepository.GetAllMatchingAsync(request.SearchPhrase,
+                request.PageSize,
+            request.PageNumber,
+            request.SortBy,
+            request.SortDirection);
             var productdtos = _mapper.Map<IEnumerable<ProductDTO>>(products);
+            var result = new PagedResult<ProductDTO>(productdtos, totalCount, request.PageSize, request.PageNumber);
             return productdtos;
         }
     }

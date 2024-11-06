@@ -7,22 +7,21 @@ using System.Text;
 using System.Threading.Tasks;
 using OnlineShop.Domain.Entities;
 using OnlineShop.Application.Skus.DTO;
+using System.Text.Json;
+using OnlineShop.Application.Groups.DTO;
+using OnlineShop.Application.Brands.DTO;
+using OnlineShop.Application.Categories.DTO;
 
 namespace OnlineShop.Application.Products.DTO
 {
     public class ProductDTO
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long ProductId { get; set; }
-        [MaxLength(64)]
         public string ProductName { get; set; }
-        [MaxLength(256)]
-        public string ProductDesc { get; set; }
-        public byte ProductStatus { get; set; } = 0;  // 0: out of stock, 1: in stock
-        public string ProductAttrs { get; set; }  // JSON attributes
-        public bool IsDeleted { get; set; } = false;
-        public int Sort { get; set; } = 0;
+        public string Slug { get; set; }
+        public GroupDTO? Group { get; set; }
+        public BrandDTO? Brand { get; set; }
+        public CategoryDTO? Category { get; set; }
         public ICollection<SkuDTO> Skus { get; set; }
     }
 }

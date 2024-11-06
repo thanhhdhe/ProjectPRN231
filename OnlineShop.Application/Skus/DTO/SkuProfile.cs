@@ -14,7 +14,9 @@ namespace OnlineShop.Application.Skus.DTO
     {
         public SkuProfile()
         {
-            CreateMap<Sku, SkuDTO>();
+            CreateMap<Sku, SkuDTO>()
+            //.ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
+            .ForMember(dest => dest.Variants, opt => opt.MapFrom(src => src.Variants));
         }
     }
 }
