@@ -25,19 +25,12 @@ namespace OnlineShop.Infrastructure.Repositories
         {
             _context.Products.Add(productEntity);
             await _context.SaveChangesAsync();
-            return productEntity.ProductId;
+            return productEntity.Id;
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync()
         {
             var products = await _context.Products
-                .Include(p => p.Brand) // Include Brand
-                .Include(p => p.Group)
-                .Include(p => p.Category)
-                .Include(p => p.Skus) // Include Skus
-                    .ThenInclude(s => s.SkuImages) // Include Images for each SKU
-                .Include(p => p.Skus) // Include Skus
-                    .ThenInclude(s => s.Variants) // Include Variants for each SKU
                 .ToListAsync();
             return products;
         }
@@ -52,8 +45,8 @@ namespace OnlineShop.Infrastructure.Repositories
 
             var baseQuery = _context
                 .Products
-                .Where(r => searchPhraseLower == null || (r.ProductName.ToLower().Contains(searchPhraseLower)
-                                                       || r.ProductDesc.ToLower().Contains(searchPhraseLower)));
+                .Where(r => searchPhraseLower == null || (r.Name.ToLower().Contains(searchPhraseLower)
+                                                       || r.Description.ToLower().Contains(searchPhraseLower)));
 
             var totalCount = await baseQuery.CountAsync();
 
@@ -61,8 +54,8 @@ namespace OnlineShop.Infrastructure.Repositories
             {
                 var columnsSelector = new Dictionary<string, Expression<Func<Product, object>>>
             {
-                { nameof(Product.ProductName), r => r.ProductName },
-                { nameof(Product.ProductDesc), r => r.ProductDesc },
+                { nameof(Product.Name), r => r.Name },
+                { nameof(Product.Description), r => r.Description },
             };
 
                 var selectedColumn = columnsSelector[sortBy];
@@ -75,13 +68,6 @@ namespace OnlineShop.Infrastructure.Repositories
             var products = await baseQuery
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
-                .Include(p => p.Brand)
-                //.Include(p => p.Group)
-                .Include(p => p.Category)
-                .Include(p => p.Skus)
-                    .ThenInclude(s => s.SkuImages)
-                .Include(p => p.Skus)
-                    .ThenInclude(s => s.Variants)
                 .ToListAsync();
 
             return (products, totalCount);
@@ -90,15 +76,8 @@ namespace OnlineShop.Infrastructure.Repositories
         public async Task<Product> GetByIdAsync(long id)
         {
             var products = await _context.Products
-                .Include(p => p.Brand) 
-                //.Include(p => p.Group)
-                .Include(p => p.Category)
-                .Include(p => p.Skus) 
-                    .ThenInclude(s => s.SkuImages) 
-                .Include(p => p.Skus) 
-                    .ThenInclude(s => s.Variants) // Include Variants for each SKU
                 .FirstOrDefaultAsync(y =>
-            y.ProductId == id);
+                y.Id == id);
             return products;
         }
     }

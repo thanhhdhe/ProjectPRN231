@@ -7,31 +7,25 @@ namespace OnlineShop.Domain.Entities
     {
         public Product()
         {
-            Comments = new HashSet<Comment>();
-            ProductAttributes = new HashSet<ProductAttribute>();
-            Skus = new HashSet<Sku>();
+            ProductVariants = new HashSet<ProductVariant>();
+            Reviews = new HashSet<Review>();
         }
 
-        public int ProductId { get; set; }
-        public int? CategoryId { get; set; }
-        public int? BrandId { get; set; }
-        public int? GroupId { get; set; }
-        public string ProductName { get; set; } = null!;
-        public string? ProductDesc { get; set; }
-        public byte? ProductStatus { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        public string? Brand { get; set; }
+        public string? ModelNumber { get; set; }
+        public string? Description { get; set; }
+        public string? Specifications { get; set; }
+        public string? Warranty { get; set; }
+        public string? CoverImage { get; set; }
+        public int CategoryId { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public bool? IsDeleted { get; set; }
-        public int? Sort { get; set; }
-        public string? ThumbnailUrl { get; set; }
-        public string? Slug { get; set; }
-        public DateTime? CreateTime { get; set; }
-        public DateTime? UpdateTime { get; set; }
-        public string? Status { get; set; }
 
-        public virtual Brand? Brand { get; set; }
-        public virtual Category? Category { get; set; }
-        public virtual Group? Group { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<ProductAttribute> ProductAttributes { get; set; }
-        public virtual ICollection<Sku> Skus { get; set; }
+        public virtual Category Category { get; set; } = null!;
+        public virtual ICollection<ProductVariant> ProductVariants { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }

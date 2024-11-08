@@ -14,8 +14,7 @@ namespace OnlineShop.Application.Products.DTO
         public ProductProfile()
         {
             CreateMap<CreateProductCommand, Product>();
-            CreateMap<Product, ProductDTO>()
-                .ForMember(d => d.Skus, opt => opt.MapFrom(src => src.Skus));
+            CreateMap<Product, ProductDTO>();
         }
     }
 }

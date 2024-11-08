@@ -6,22 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using OnlineShop.Domain.Entities;
-using OnlineShop.Application.Skus.DTO;
-using System.Text.Json;
-using OnlineShop.Application.Groups.DTO;
-using OnlineShop.Application.Brands.DTO;
 using OnlineShop.Application.Categories.DTO;
 
 namespace OnlineShop.Application.Products.DTO
 {
     public class ProductDTO
     {
-        public long ProductId { get; set; }
-        public string ProductName { get; set; }
-        public string Slug { get; set; }
-        public GroupDTO? Group { get; set; }
-        public BrandDTO? Brand { get; set; }
-        public CategoryDTO? Category { get; set; }
-        public ICollection<SkuDTO> Skus { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        public string? Brand { get; set; }
+        public string? ModelNumber { get; set; }
+        public string? Description { get; set; }
+        public string? Specifications { get; set; }
+        public string? Warranty { get; set; }
+        public string? CoverImage { get; set; }
     }
 }

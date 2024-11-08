@@ -3,23 +3,20 @@ using System.Collections.Generic;
 
 namespace OnlineShop.Domain.Entities
 {
-    public partial class Order
+    public partial class Cart
     {
-        public Order()
+        public Cart()
         {
-            OrderItems = new HashSet<OrderItem>();
-            PaymentDetails = new HashSet<PaymentDetail>();
+            CartItems = new HashSet<CartItem>();
         }
 
         public int Id { get; set; }
         public int UserId { get; set; }
         public decimal? TotalAmount { get; set; }
-        public string? Status { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
         public virtual User User { get; set; } = null!;
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
-        public virtual ICollection<PaymentDetail> PaymentDetails { get; set; }
+        public virtual ICollection<CartItem> CartItems { get; set; }
     }
 }
