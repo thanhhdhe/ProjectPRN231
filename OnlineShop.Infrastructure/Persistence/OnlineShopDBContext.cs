@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using OnlineShop.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace OnlineShop.Infrastructure.Persistence
 {
@@ -35,7 +36,34 @@ namespace OnlineShop.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<IdentityUser>(enitity =>
+            {
+                enitity.ToTable("Users");
+            });
+            modelBuilder.Entity<IdentityRole>(enitity =>
+            {
+                enitity.ToTable("Roles");
+            });
+            modelBuilder.Entity<IdentityUserRole<string>>(enitity =>
+            {
+                enitity.ToTable("UserRoles");
+            });
+            modelBuilder.Entity<IdentityUserClaim<string>>(enitity =>
+            {
+                enitity.ToTable("UserClaims");
+            });
+            modelBuilder.Entity<IdentityUserLogin<string>>(enitity =>
+            {
+                enitity.ToTable("UserLogins");
+            });
+            modelBuilder.Entity<IdentityRoleClaim<string>>(enitity =>
+            {
+                enitity.ToTable("RoleClaims");
+            });
+            modelBuilder.Entity<IdentityUserToken<string>>(enitity =>
+            {
+                enitity.ToTable("UserTokens");
+            });
             // Configure Category relationships
             modelBuilder.Entity<Category>()
                 .HasOne(c => c.ParentCategory)
