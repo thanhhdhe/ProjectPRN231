@@ -35,42 +35,68 @@ namespace OnlineShop.Infrastructure.Repositories
             return products;
         }
 
-        public async Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase,
-        int pageSize,
-        int pageNumber,
-        string? sortBy,
-        SortDirection sortDirection)
+        public async Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(
+    string? searchPhrase,
+    int? categoryId,
+    decimal? minPrice,
+    decimal? maxPrice,
+    int pageSize,
+    int pageNumber,
+    string? sortBy,
+    SortDirection sortDirection
+)
         {
-            var searchPhraseLower = searchPhrase?.ToLower();
+            var query = _context.Products.Include(p => p.ProductVariants)
+                                         .Where(p => p.IsDeleted != true);
 
-            var baseQuery = _context
-                .Products
-                .Where(r => searchPhraseLower == null || (r.Name.ToLower().Contains(searchPhraseLower)
-                                                       || r.Description.ToLower().Contains(searchPhraseLower)));
-
-            var totalCount = await baseQuery.CountAsync();
-
-            if (sortBy != null)
+            // Apply search filters on Name and Description
+            if (!string.IsNullOrEmpty(searchPhrase))
             {
-                var columnsSelector = new Dictionary<string, Expression<Func<Product, object>>>
-            {
-                { nameof(Product.Name), r => r.Name },
-                { nameof(Product.Description), r => r.Description },
-            };
-
-                var selectedColumn = columnsSelector[sortBy];
-
-                baseQuery = sortDirection == SortDirection.Ascending
-                    ? baseQuery.OrderBy(selectedColumn)
-                    : baseQuery.OrderByDescending(selectedColumn);
+                query = query.Where(p => p.Name.Contains(searchPhrase) || p.Description.Contains(searchPhrase));
             }
 
-            var products = await baseQuery
-                .Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
-                .ToListAsync();
+            // Apply category filter
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId);
+            }
+
+            // Apply price filters based on ProductVariants
+            if (minPrice.HasValue || maxPrice.HasValue)
+            {
+                query = query.Where(p => p.ProductVariants
+                                          .Any(v =>
+                                                (!minPrice.HasValue || v.SalePrice >= minPrice) &&
+                                                (!maxPrice.HasValue || v.SalePrice <= maxPrice)));
+            }
+
+            // Sorting
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                query = sortDirection == SortDirection.Ascending
+                    ? query.OrderBy(p => EF.Property<object>(p, sortBy))
+                    : query.OrderByDescending(p => EF.Property<object>(p, sortBy));
+            }
+
+            // Get total count for pagination
+            var totalCount = await query.CountAsync();
+
+            // Paginate the results
+            var products = await query.Skip((pageNumber - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
 
             return (products, totalCount);
+        }
+
+        public async Task SoftDeleteAsync(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
+            {
+                product.IsDeleted = true;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<Product> GetByIdAsync(long id)
