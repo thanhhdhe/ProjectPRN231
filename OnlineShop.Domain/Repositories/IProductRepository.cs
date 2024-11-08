@@ -13,6 +13,16 @@ namespace OnlineShop.Domain.Repositories
         Task<long> AddAsync(Product productEntity);
         Task<IEnumerable<Product>> GetAllAsync();
         Task<Product> GetByIdAsync(long id);
-        Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase, int pageSize, int pageNumber, string? sortBy, SortDirection sortDirection);
+        Task SoftDeleteAsync(int id);
+        Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(
+        string? searchPhrase,
+        int? categoryId,
+        decimal? minPrice,
+        decimal? maxPrice,
+        int pageSize,
+        int pageNumber,
+        string? sortBy,
+        SortDirection sortDirection
+    );
     }
 }

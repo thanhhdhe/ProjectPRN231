@@ -12,30 +12,33 @@ using System.Threading.Tasks;
 
 namespace OnlineShop.Application.Products.Queries.GetAllProduct
 {
-    public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQuery, IEnumerable<ProductDTO>>
+    public class GetAllProductQueryHandler : IRequestHandler<GetAllProductQuery, PagedResult<ProductDTO>>
     {
-        public readonly IProductRepository _productRepository;
-        private readonly ILogger<GetAllProductQueryHandler> _logger;
+        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
-        public GetAllProductQueryHandler(IProductRepository productRepository,
-            ILogger<GetAllProductQueryHandler> logger,
-            IMapper mapper)
+
+        public GetAllProductQueryHandler(IProductRepository productRepository, IMapper mapper)
         {
-            _logger = logger;
-            _mapper = mapper;
             _productRepository = productRepository;
+            _mapper = mapper;
         }
-        public async Task<IEnumerable<ProductDTO>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
+
+        public async Task<PagedResult<ProductDTO>> Handle(GetAllProductQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Getting all products");
-            var (products, totalCount) = await _productRepository.GetAllMatchingAsync(request.SearchPhrase,
+            var (products, totalCount) = await _productRepository.GetAllMatchingAsync(
+                request.SearchPhrase,
+                request.CategoryId,
+                request.MinPrice,
+                request.MaxPrice,
                 request.PageSize,
-            request.PageNumber,
-            request.SortBy,
-            request.SortDirection);
-            var productdtos = _mapper.Map<IEnumerable<ProductDTO>>(products);
-            var result = new PagedResult<ProductDTO>(productdtos, totalCount, request.PageSize, request.PageNumber);
-            return productdtos;
+                request.PageNumber,
+                request.SortBy,
+                request.SortDirection
+            );
+
+            var productDTOs = _mapper.Map<IEnumerable<ProductDTO>>(products);
+            return new PagedResult<ProductDTO>(productDTOs, totalCount, request.PageSize, request.PageNumber);
         }
     }
+
 }
