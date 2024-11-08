@@ -12,7 +12,7 @@ namespace OnlineShop.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; } = default!;
 
         public string Message { get; set; }
 
@@ -21,6 +21,6 @@ namespace OnlineShop.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         // Navigation property
-        public User User { get; set; }
+        public User User { get; set; } = default!;
     }
 }

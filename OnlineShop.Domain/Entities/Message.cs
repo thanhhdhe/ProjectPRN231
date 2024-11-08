@@ -12,7 +12,7 @@ namespace OnlineShop.Domain.Entities
         public int ConversationId { get; set; }
 
         [Required]
-        public int SenderId { get; set; }
+        public string SenderId { get; set; } = default!;
 
         [Required]
         public string Content { get; set; }
@@ -23,6 +23,6 @@ namespace OnlineShop.Domain.Entities
 
         // Navigation properties
         public Conversation Conversation { get; set; }
-        public User Sender { get; set; }
+        public User Sender { get; set; } = default!;
     }
 }

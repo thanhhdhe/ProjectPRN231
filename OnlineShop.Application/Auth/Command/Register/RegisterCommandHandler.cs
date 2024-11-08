@@ -45,12 +45,12 @@ namespace OnlineShop.Application.Auth.Command.Register
                 Avatar = request.Avatar,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
-                Role = "something",
+                //Role = "something",
                 Position = "something"
             };
 
             // Hash the password
-            user.Password = _passwordHasher.HashPassword(user, request.Password);
+            //user.Password = _passwordHasher.HashPassword(user, request.Password);
 
             await _userRepository.AddUserAsync(user);
 

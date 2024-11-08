@@ -30,7 +30,7 @@ namespace OnlineShop.Application.Auth.Command.Login
         public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetUserByEmailAsync(request.Email);
-            if (user == null || _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password) == PasswordVerificationResult.Failed)
+            if (user == null || _passwordHasher.VerifyHashedPassword(user, user.Avatar, request.Password) == PasswordVerificationResult.Failed)
             {
                 throw new UnauthorizedException("Invalid credentials");
             }

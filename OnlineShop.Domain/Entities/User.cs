@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShop.Domain.Entities
 {
-    public class User
+    public class User : IdentityUser
     {
-        public int Id { get; set; }
-
         [MaxLength(255)]
-        public string Avatar { get; set; }
+        public string? Avatar { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -19,26 +18,10 @@ namespace OnlineShop.Domain.Entities
         [MaxLength(50)]
         public string LastName { get; set; }
 
-        [Required]
-        [EmailAddress]
-        [MaxLength(100)]
-        public string Email { get; set; }
-
-        [Required]
-        [MaxLength(255)]
-        public string Password { get; set; }
-
         public DateTime? DateOfBirth { get; set; }
 
-        [MaxLength(20)]
-        public string PhoneNumber { get; set; }
-
-        [Required]
-        [MaxLength(20)]
-        public string Role { get; set; }
-
         [MaxLength(100)]
-        public string Position { get; set; } // Chỉ áp dụng cho nhân viên
+        public string? Position { get; set; } // Only for staff members
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
@@ -47,13 +30,15 @@ namespace OnlineShop.Domain.Entities
         public bool IsDeleted { get; set; } = false;
 
         // Navigation properties
-        public ICollection<Address> Addresses { get; set; }
-        public ICollection<Notification> Notifications { get; set; }
+        public ICollection<Address> Addresses { get; set; } = new List<Address>();
+        public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
         public Cart Cart { get; set; }
-        public ICollection<Order> Orders { get; set; }
-        public ICollection<Review> Reviews { get; set; }
-        public ICollection<Conversation> ConversationsAsCustomer { get; set; }
-        public ICollection<Conversation> ConversationsAsStaff { get; set; }
-        public ICollection<Message> Messages { get; set; }
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+        // Conversations: Either as a customer or staff
+        public ICollection<Conversation> ConversationsAsCustomer { get; set; } = new List<Conversation>();
+        public ICollection<Conversation> ConversationsAsStaff { get; set; } = new List<Conversation>();
+        public ICollection<Message> Messages { get; set; } = new List<Message>();
     }
 }

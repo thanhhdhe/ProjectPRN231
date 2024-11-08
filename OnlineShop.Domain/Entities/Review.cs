@@ -9,7 +9,7 @@ namespace OnlineShop.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string CustomerId { get; set; } = default!;
 
         [Required]
         public int ProductId { get; set; }
@@ -25,7 +25,7 @@ namespace OnlineShop.Domain.Entities
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         // Navigation properties
-        public User User { get; set; }
+        public User Customer { get; set; }
         public Product Product { get; set; }
     }
 }

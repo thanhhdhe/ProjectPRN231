@@ -27,7 +27,7 @@ namespace OnlineShop.Infrastructure.Repositories
         public async Task<User> GetUserByEmailAndPasswordAsync(string email, string password)
         {
             return await _context.Users
-            .FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+            .FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<User> GetUserByEmailAsync(string email)

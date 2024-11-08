@@ -9,10 +9,10 @@ namespace OnlineShop.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int CustomerId { get; set; } // User với role 'user'
+        public string CustomerId { get; set; } // User với role 'user'
 
         [Required]
-        public int StaffId { get; set; } // User với role 'staff'
+        public string StaffId { get; set; } // User với role 'staff'
 
         [MaxLength(255)]
         public string Subject { get; set; }

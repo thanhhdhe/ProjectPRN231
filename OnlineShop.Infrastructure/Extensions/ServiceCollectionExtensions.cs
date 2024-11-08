@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OnlineShop.Domain.Entities;
 using OnlineShop.Domain.Repositories;
 using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repositories;
@@ -19,7 +21,9 @@ public static class ServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("MyDatabase");
         services.AddDbContext<OnlineShopDBContext>(options =>
         options.UseSqlServer(connectionString));
-
+        services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<OnlineShopDBContext>()
+                .AddDefaultTokenProviders();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
 

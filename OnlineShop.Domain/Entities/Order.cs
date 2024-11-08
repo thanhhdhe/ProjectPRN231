@@ -10,7 +10,7 @@ namespace OnlineShop.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string CustomerId { get; set; } = default!;
         [Column(TypeName = "decimal(18, 0)")]
         public decimal TotalAmount { get; set; }
 
@@ -23,7 +23,7 @@ namespace OnlineShop.Domain.Entities
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         // Navigation properties
-        public User User { get; set; }
+        public User Customer { get; set; } = default!;
         public ICollection<OrderItem> OrderItems { get; set; }
         public PaymentDetail PaymentDetail { get; set; }
     }

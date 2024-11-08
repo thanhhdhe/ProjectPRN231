@@ -9,7 +9,7 @@ namespace OnlineShop.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string CustomerId { get; set; } = default!;
 
         [Required]
         [MaxLength(100)]
@@ -42,6 +42,6 @@ namespace OnlineShop.Domain.Entities
         public bool IsDeleted { get; set; } = false;
 
         // Navigation property
-        public User User { get; set; }
+        public User Customer { get; set; } = default!;
     }
 }

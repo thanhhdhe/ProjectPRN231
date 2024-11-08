@@ -106,5 +106,10 @@ namespace OnlineShop.Infrastructure.Repositories
                 y.Id == id);
             return products;
         }
+
+        public Task<(IEnumerable<Product>, int)> GetAllMatchingAsync(string? searchPhrase, int pageSize, int pageNumber, string? sortBy, SortDirection sortDirection)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
