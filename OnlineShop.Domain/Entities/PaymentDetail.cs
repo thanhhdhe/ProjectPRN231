@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineShop.Domain.Entities
 {
@@ -12,6 +13,7 @@ namespace OnlineShop.Domain.Entities
         public int OrderId { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(18, 0)")]
         public decimal Amount { get; set; }
 
         [MaxLength(100)]

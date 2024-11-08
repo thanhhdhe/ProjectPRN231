@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineShop.Domain.Entities
 {
@@ -10,7 +11,7 @@ namespace OnlineShop.Domain.Entities
 
         [Required]
         public int UserId { get; set; }
-
+        [Column(TypeName = "decimal(18, 0)")]
         public decimal TotalAmount { get; set; } = 0;
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;

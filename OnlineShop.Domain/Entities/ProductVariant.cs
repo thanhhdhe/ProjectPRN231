@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineShop.Domain.Entities
 {
@@ -14,9 +15,11 @@ namespace OnlineShop.Domain.Entities
         [MaxLength(100)]
         public string SKU { get; set; }
 
-        [Required]
-        public decimal SalePrice { get; set; }
 
+        [Column(TypeName = "decimal(18, 0)")]
+        public decimal? SalePrice { get; set; }
+        [Required]
+        [Column(TypeName = "decimal(18, 0)")]
         public decimal? Price { get; set; }
 
         public int Quantity { get; set; }

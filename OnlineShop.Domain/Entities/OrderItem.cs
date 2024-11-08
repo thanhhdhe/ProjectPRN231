@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnlineShop.Domain.Entities
 {
@@ -18,6 +19,7 @@ namespace OnlineShop.Domain.Entities
         public int Quantity { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(18, 0)")]
         public decimal Price { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
