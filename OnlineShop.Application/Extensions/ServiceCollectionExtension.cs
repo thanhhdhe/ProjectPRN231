@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineShop.Application.Products;
+using OnlineShop.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,7 @@ namespace OnlineShop.Application.Extensions
             services.AddAutoMapper(assembly);
             services.AddValidatorsFromAssembly(assembly)
                 .AddFluentValidationAutoValidation();
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
         }
     }
 }

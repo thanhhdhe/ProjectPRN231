@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
         options.UseSqlServer(connectionString));
 
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
     }
 }
