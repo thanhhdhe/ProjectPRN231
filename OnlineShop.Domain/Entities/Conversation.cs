@@ -1,25 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShop.Domain.Entities
 {
-    public partial class Conversation
+    public class Conversation
     {
-        public Conversation()
-        {
-            Messages = new HashSet<Message>();
-        }
-
         public int Id { get; set; }
-        public int CustomerId { get; set; }
-        public int StaffId { get; set; }
-        public string? Subject { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-        public bool? IsDeleted { get; set; }
 
-        public virtual User Customer { get; set; } = null!;
-        public virtual User Staff { get; set; } = null!;
-        public virtual ICollection<Message> Messages { get; set; }
+        [Required]
+        public int CustomerId { get; set; } // User với role 'user'
+
+        [Required]
+        public int StaffId { get; set; } // User với role 'staff'
+
+        [MaxLength(255)]
+        public string Subject { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
+        public bool IsDeleted { get; set; } = false;
+
+        // Navigation properties
+        public User Customer { get; set; }
+        public User Staff { get; set; }
+        public ICollection<Message> Messages { get; set; }
     }
 }

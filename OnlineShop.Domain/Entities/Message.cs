@@ -1,18 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShop.Domain.Entities
 {
-    public partial class Message
+    public class Message
     {
         public int Id { get; set; }
-        public int ConversationId { get; set; }
-        public int SenderId { get; set; }
-        public string? Content { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public bool? IsDeleted { get; set; }
 
-        public virtual Conversation Conversation { get; set; } = null!;
-        public virtual User Sender { get; set; } = null!;
+        [Required]
+        public int ConversationId { get; set; }
+
+        [Required]
+        public int SenderId { get; set; }
+
+        [Required]
+        public string Content { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public bool IsDeleted { get; set; } = false;
+
+        // Navigation properties
+        public Conversation Conversation { get; set; }
+        public User Sender { get; set; }
     }
 }

@@ -1,25 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace OnlineShop.Domain.Entities
 {
-    public partial class Order
+    public class Order
     {
-        public Order()
-        {
-            OrderItems = new HashSet<OrderItem>();
-            PaymentDetails = new HashSet<PaymentDetail>();
-        }
-
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public decimal? TotalAmount { get; set; }
-        public string? Status { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
 
-        public virtual User User { get; set; } = null!;
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
-        public virtual ICollection<PaymentDetail> PaymentDetails { get; set; }
+        [Required]
+        public int UserId { get; set; }
+
+        public decimal TotalAmount { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string Status { get; set; } = "Pending";
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
+        // Navigation properties
+        public User User { get; set; }
+        public ICollection<OrderItem> OrderItems { get; set; }
+        public PaymentDetail PaymentDetail { get; set; }
     }
 }
