@@ -13,7 +13,8 @@ using System.Reflection; // <-- Make sure this is included
 using OnlineShop.Application.ProductVariant.Queries; // Adjust based on where your handlers/queries are located
 using OnlineShop.Domain.Repositories; // Adjust based on where your repository interfaces are located
 using OnlineShop.Infrastructure.Repositories;
-using OnlineShop.Domain.Entities; // Adjust based on where your repository implementations are located
+using OnlineShop.Domain.Entities;
+using Microsoft.AspNetCore.Identity; // Adjust based on where your repository implementations are located
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,8 +64,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<User>();
 
+
+app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 

@@ -21,9 +21,7 @@ public static class ServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("MyDatabase");
         services.AddDbContext<OnlineShopDBContext>(options =>
         options.UseSqlServer(connectionString));
-        services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<OnlineShopDBContext>()
-                .AddDefaultTokenProviders();
+        services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<OnlineShopDBContext>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
 

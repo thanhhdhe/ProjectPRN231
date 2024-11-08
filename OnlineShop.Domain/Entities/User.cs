@@ -10,13 +10,11 @@ namespace OnlineShop.Domain.Entities
         [MaxLength(255)]
         public string? Avatar { get; set; }
 
-        [Required]
         [MaxLength(50)]
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        [Required]
         [MaxLength(50)]
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
 

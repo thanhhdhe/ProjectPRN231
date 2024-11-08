@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineShop.Application.Products;
+using OnlineShop.Application.Users;
 using OnlineShop.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,9 @@ namespace OnlineShop.Application.Extensions
             services.AddAutoMapper(assembly);
             services.AddValidatorsFromAssembly(assembly)
                 .AddFluentValidationAutoValidation();
-            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            //services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<IUserContext, UserContext>();
+            services.AddHttpContextAccessor();
         }
     }
 }

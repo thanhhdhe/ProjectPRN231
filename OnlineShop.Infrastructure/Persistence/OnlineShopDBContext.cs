@@ -33,10 +33,11 @@ namespace OnlineShop.Infrastructure.Persistence
         public virtual DbSet<ProductVariant> ProductVariants { get; set; } = null!;
         public virtual DbSet<Review> Reviews { get; set; } = null!;
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<IdentityUser>(enitity =>
+            modelBuilder.Entity<User>(enitity =>
             {
                 enitity.ToTable("Users");
             });

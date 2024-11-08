@@ -15,6 +15,7 @@ namespace OnlineShop.Application.Auth.Command.Register
 {
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, string>
     {
+        private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IPasswordHasher<User> _passwordHasher;
@@ -42,7 +43,7 @@ namespace OnlineShop.Application.Auth.Command.Register
                 LastName = request.LastName,
                 FirstName = request.FirstName,
                 PhoneNumber = request.PhoneNumber,
-                Avatar = request.Avatar,
+                //Avatar = request.Avatar,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 //Role = "something",
@@ -50,7 +51,7 @@ namespace OnlineShop.Application.Auth.Command.Register
             };
 
             // Hash the password
-            //user.Password = _passwordHasher.HashPassword(user, request.Password);
+            user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
 
             await _userRepository.AddUserAsync(user);
 

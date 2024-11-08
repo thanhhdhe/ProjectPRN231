@@ -6,24 +6,24 @@ using OnlineShop.Application.Auth.Command.Register;
 
 namespace OnlineShop.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/identity")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class IdentityController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public AuthController(IMediator mediator)
+        public IdentityController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginCommand command)
-        {
-            var token = await _mediator.Send(command);
-            return Ok(new { Token = token });
-        }
-        [HttpPost("register")]
+        //[HttpPost("login")]
+        //public async Task<IActionResult> Login([FromBody] LoginCommand command)
+        //{
+        //    var token = await _mediator.Send(command);
+        //    return Ok(new { Token = token });
+        //}
+        [HttpPost("signUp")]
         public async Task<IActionResult> Register([FromBody] RegisterCommand command)
         {
             var token = await _mediator.Send(command);
