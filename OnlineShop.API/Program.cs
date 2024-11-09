@@ -14,6 +14,7 @@ using OnlineShop.Application.ProductVariant.Queries; // Adjust based on where yo
 using OnlineShop.Domain.Repositories; // Adjust based on where your repository interfaces are located
 using OnlineShop.Infrastructure.Repositories;
 using OnlineShop.Domain.Entities;
+using OnlineShop.Infrastructure.Seeder; // Adjust based on where your repository implementations are located
 using Microsoft.AspNetCore.Identity; // Adjust based on where your repository implementations are located
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.API.Hubs;
@@ -62,6 +63,11 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddSignalR();
 var app = builder.Build();
+
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<ISeedData>();
+
+await seeder.Seed();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeLoggingMiddleware>();
 // Configure the HTTP request pipeline.

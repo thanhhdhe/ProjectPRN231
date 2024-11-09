@@ -6,6 +6,7 @@ using OnlineShop.Domain.Entities;
 using OnlineShop.Domain.Repositories;
 using OnlineShop.Infrastructure.Persistence;
 using OnlineShop.Infrastructure.Repositories;
+using OnlineShop.Infrastructure.Seeder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,14 @@ public static class ServiceCollectionExtensions
         var connectionString = configuration.GetConnectionString("MyDatabase");
         services.AddDbContext<OnlineShopDBContext>(options =>
         options.UseSqlServer(connectionString));
-        services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<OnlineShopDBContext>();
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.SignIn.RequireConfirmedEmail = true;
+        });
+        services.AddIdentityApiEndpoints<User>()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<OnlineShopDBContext>();
+        services.AddScoped<ISeedData, SeedData>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
 

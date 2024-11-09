@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using OnlineShop.Application.Email;
 using OnlineShop.Domain.Entities;
 using OnlineShop.Domain.Repositories;
 using System;
@@ -19,12 +21,18 @@ namespace OnlineShop.Application.Auth.Command.Register
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IEmailSender _senderEmail;
 
-        public RegisterCommandHandler(IUserRepository userRepository, IConfiguration configuration, IPasswordHasher<User> passwordHasher)
+        public RegisterCommandHandler(IUserRepository userRepository, 
+            IConfiguration configuration, 
+            IPasswordHasher<User> passwordHasher,
+            IEmailSender emailSender)
         {
             _userRepository = userRepository;
             _configuration = configuration;
             _passwordHasher = passwordHasher;
+            _senderEmail = emailSender;
+
         }
 
         public async Task<string> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -55,6 +63,9 @@ namespace OnlineShop.Application.Auth.Command.Register
 
             await _userRepository.AddUserAsync(user);
 
+
+            // Send email
+            await _senderEmail.SendEmailAsync(user.Email, "Welcome to OnlineShop", "You have successfully registered to OnlineShop");
             // Generate JWT token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
