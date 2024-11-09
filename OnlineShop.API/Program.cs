@@ -90,7 +90,9 @@ app.UseMiddleware<RequestTimeLoggingMiddleware>();
 app.UseOpenApi();  // Tạo Swagger JSON
 app.UseSwaggerUI(); // Tạo Swagger JSON
 
-app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<User>();
+app.MapGroup("api/identity").WithTags("Identity").MapCustomIdentityApi<User>();
+
+
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
