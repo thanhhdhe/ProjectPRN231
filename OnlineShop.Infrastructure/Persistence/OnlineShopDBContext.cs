@@ -5,6 +5,7 @@ using OnlineShop.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace OnlineShop.Infrastructure.Persistence
 {
@@ -18,7 +19,19 @@ namespace OnlineShop.Infrastructure.Persistence
             : base(options)
         {
         }
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                Console.WriteLine(Directory.GetCurrentDirectory());
+                IConfiguration config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+                var strConn = config["ConnectionStrings:MyDatabase"];
+                optionsBuilder.UseSqlServer(strConn);
+            }
+        }
         public virtual DbSet<Address> Addresses { get; set; } = null!;
         public virtual DbSet<Cart> Carts { get; set; } = null!;
         public virtual DbSet<CartItem> CartItems { get; set; } = null!;

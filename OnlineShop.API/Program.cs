@@ -15,7 +15,9 @@ using OnlineShop.Domain.Repositories; // Adjust based on where your repository i
 using OnlineShop.Infrastructure.Repositories;
 using OnlineShop.Domain.Entities;
 using Microsoft.AspNetCore.Identity; // Adjust based on where your repository implementations are located
-
+using Microsoft.EntityFrameworkCore;
+using OnlineShop.API.Hubs;
+using OnlineShop.Application.Message.Hub;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,6 +25,8 @@ builder.AddPresentation();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
+builder.Services.AddDbContext<OnlineShopDBContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
 
 // Add MediatR to the container for handling CQRS requests
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly())); // Correct usage
@@ -31,7 +35,9 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 builder.Services.AddScoped<IProductVariantRepository, ProductVariantRepository>(); // Replace with your actual implementation
 builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>(); // Replace with your actual implementation
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>(); // Replace with your actual implementation
-
+builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IMessageHub, ChatHub>();
 // Add Swagger/OpenAPI support
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -54,6 +60,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
+builder.Services.AddSignalR();
 var app = builder.Build();
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeLoggingMiddleware>();
@@ -70,5 +77,5 @@ app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<User>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
+app.MapHub<ChatHub>("/chathub");
 app.Run();
