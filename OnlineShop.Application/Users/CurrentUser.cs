@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace OnlineShop.Application.Users
 {
-    public record CurrentUser(string Id, string Email, IEnumerable<string> Roless)
+    public record CurrentUser(string Id, string Email, IEnumerable<string> Roles)
     {
-        public bool IsInRole(string role) => Roless.Contains(role);
+        public bool IsInRole(string role) => Roles.Contains(role);
     }
 }

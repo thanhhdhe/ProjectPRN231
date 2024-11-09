@@ -12,5 +12,6 @@ namespace OnlineShop.Domain.Repositories
         Task AddUserAsync(User user);
         Task<User> GetUserByEmailAndPasswordAsync(string email, string password);
         Task<User> GetUserByEmailAsync(string email);
+        Task<User> GetUserByIdAsync(string userId);
     }
 }

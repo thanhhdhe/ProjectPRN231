@@ -35,5 +35,11 @@ namespace OnlineShop.Infrastructure.Repositories
             return await _context.Users
              .FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return await _context.Users
+             .FirstOrDefaultAsync(u => u.Id == userId);
+        }
     }
 }

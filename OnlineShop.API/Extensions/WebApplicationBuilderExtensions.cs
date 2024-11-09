@@ -14,11 +14,7 @@ namespace OnlineShop.API.Extensions
             {
                 c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
                 {
-                    In = ParameterLocation.Header,
-                    Description = "Please enter a valid token",
-                    Name = "Authorization",
                     Type = SecuritySchemeType.Http,
-                    BearerFormat = "JWT",
                     Scheme = "Bearer"
                 });
 
@@ -27,13 +23,9 @@ namespace OnlineShop.API.Extensions
                 {
                     new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference 
-                        { 
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "bearerAuth"
-                        }
+                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth"}
                     },
-                    new string[]{}
+                    []
                 }
 
             });
