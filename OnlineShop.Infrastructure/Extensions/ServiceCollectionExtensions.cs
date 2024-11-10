@@ -29,9 +29,12 @@ public static class ServiceCollectionExtensions
         services.AddIdentityApiEndpoints<User>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<OnlineShopDBContext>();
+
         services.AddScoped<ISeedData, SeedData>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-
+        services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<ICartRepository, CartRepository>();
+        services.AddScoped<ICartItemRepository, CartItemRepository>();
     }
 }
