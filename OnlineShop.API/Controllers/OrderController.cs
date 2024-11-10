@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Application.Order.Command;
 using OnlineShop.Application.Order.Queries;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace OnlineShop.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase

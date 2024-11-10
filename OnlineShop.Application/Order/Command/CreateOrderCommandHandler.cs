@@ -4,9 +4,8 @@ using OnlineShop.Application.Users;
 using OnlineShop.Domain.Entities;
 using OnlineShop.Domain.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OnlineShop.Application.Order.Command
@@ -26,32 +25,27 @@ namespace OnlineShop.Application.Order.Command
 
         public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            // Get current user info from token
+            // Lấy thông tin người dùng hiện tại từ token
             var currentUser = _userContext.GetCurrentUser();
-            var userId = currentUser.Id;  // UserId from the token
+            var userId = currentUser.Id;
 
-            // You can also use roles here if needed
-            var roles = currentUser.Roles;  // Extract roles from the token
+            // Tính `TotalAmount` từ danh sách `Items`
+            var totalAmount = request.Items.Sum(item => item.Price * item.Quantity);
 
             var order = new Domain.Entities.Order
             {
-                Id = int.Parse(userId), // Assuming userId is a string; change if it's another type
-                TotalAmount = request.TotalAmount,
-                Status = "Pending",  // Set initial status as Pending
+                CustomerId = userId, 
+                TotalAmount = totalAmount,
+                Status = "Pending",
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            // Map OrderItems from the DTO
-            foreach (var item in request.Items)
-            {
-                order.OrderItems.Add(new OrderItem
+                UpdatedAt = DateTime.UtcNow,
+                OrderItems = request.Items.Select(item => new OrderItem
                 {
                     ProductVariantId = item.ProductId,
                     Quantity = item.Quantity,
                     Price = item.Price
-                });
-            }
+                }).ToList()
+            };
 
             return await _orderRepository.CreateAsync(order);
         }

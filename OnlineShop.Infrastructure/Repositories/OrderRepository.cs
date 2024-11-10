@@ -26,13 +26,13 @@ namespace OnlineShop.Infrastructure.Repositories
             return order.Id;
         }
 
-        public async Task<IEnumerable<Order>> GetAllOrdersAsync(int userId, bool isAdmin)
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync(string userId, bool isAdmin)
         {
             if (isAdmin)
             {
-                return await _context.Orders.ToListAsync(); // Admin can see all orders
+                return await _context.Orders.ToListAsync(); 
             }
-            return await _context.Orders.Where(o => o.CustomerId == userId.ToString()).ToListAsync(); // Customer can see only their orders
+            return await _context.Orders.Where(o => o.CustomerId == userId).ToListAsync();
         }
 
         public async Task<Order?> GetByIdAsync(int id)

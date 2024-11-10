@@ -10,7 +10,7 @@ namespace OnlineShop.Domain.Repositories
     public interface IOrderRepository
     {
         Task<int> CreateAsync(Order order);
-        Task<IEnumerable<Order>> GetAllOrdersAsync(int userId, bool isAdmin);
+        Task<IEnumerable<Order>> GetAllOrdersAsync(string userId, bool isAdmin);
         Task<Order?> GetByIdAsync(int id);
         Task CancelOrderAsync(int id);
     }
