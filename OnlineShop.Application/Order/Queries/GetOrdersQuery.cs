@@ -10,8 +10,6 @@ namespace OnlineShop.Application.Order.Queries
 {
     public class GetOrdersQuery : IRequest<IEnumerable<OrderDTO>>
     {
-        public int UserId { get; set; }
-        public bool IsAdmin { get; set; }
     }
 
 }

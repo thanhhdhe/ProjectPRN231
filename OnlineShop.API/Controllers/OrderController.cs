@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Application.Order.Command;
 using OnlineShop.Application.Order.Queries;
+using OnlineShop.Application.Users;
 using System.Threading.Tasks;
 
 namespace OnlineShop.API.Controllers
@@ -11,25 +12,28 @@ namespace OnlineShop.API.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IUserContext _userContext;
 
-        public OrderController(IMediator mediator)
+        public OrderController(IMediator mediator, IUserContext userContext)
         {
             _mediator = mediator;
+            _userContext = userContext;
         }
 
         // [POST] /api/orders
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderCommand command)
         {
+            // No need to pass UserId here; it's handled in the handler
             var orderId = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetOrderById), new { id = orderId }, null);
         }
 
         // [GET] /api/orders
         [HttpGet]
-        public async Task<IActionResult> GetOrders([FromQuery] bool isAdmin)
+        public async Task<IActionResult> GetOrders()
         {
-            var query = new GetOrdersQuery { UserId = 1, IsAdmin = isAdmin }; // Example userId, adjust as needed
+            var query = new GetOrdersQuery();
             var orders = await _mediator.Send(query);
             return Ok(orders);
         }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using OnlineShop.Application.Users;
 using OnlineShop.Domain.Entities;
 using OnlineShop.Domain.Repositories;
 using System;
@@ -14,25 +15,34 @@ namespace OnlineShop.Application.Order.Command
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IMapper _mapper;
+        private readonly IUserContext _userContext;
 
-        public CreateOrderCommandHandler(IOrderRepository orderRepository, IMapper mapper)
+        public CreateOrderCommandHandler(IOrderRepository orderRepository, IMapper mapper, IUserContext userContext)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
+            _userContext = userContext;
         }
 
         public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
+            // Get current user info from token
+            var currentUser = _userContext.GetCurrentUser();
+            var userId = currentUser.Id;  // UserId from the token
+
+            // You can also use roles here if needed
+            var roles = currentUser.Roles;  // Extract roles from the token
+
             var order = new Domain.Entities.Order
             {
-                CustomerId = request.UserId.ToString(),
+                Id = int.Parse(userId), // Assuming userId is a string; change if it's another type
                 TotalAmount = request.TotalAmount,
-                Status = "Pending",
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                Status = "Pending",  // Set initial status as Pending
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
 
-            // Map order items
+            // Map OrderItems from the DTO
             foreach (var item in request.Items)
             {
                 order.OrderItems.Add(new OrderItem
