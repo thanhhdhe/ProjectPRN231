@@ -24,7 +24,7 @@ namespace OnlineShop.Domain.Entities
 
         public int Quantity { get; set; }
 
-        public string Attributes { get; set; } // Có thể tạo bảng riêng nếu cần
+        public string Attributes { get; set; } 
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

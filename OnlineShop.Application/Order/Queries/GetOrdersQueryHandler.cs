@@ -32,7 +32,7 @@ namespace OnlineShop.Application.Order.Queries
             var roles = currentUser.Roles;  // Get roles from token (if needed)
 
             // If the user is Admin, show all orders; otherwise, show only the user's orders
-            var orders = await _orderRepository.GetAllOrdersAsync(int.Parse(userId), roles.Contains("Admin"));
+            var orders = await _orderRepository.GetAllOrdersAsync(userId, roles.Contains("Admin"));
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
         }
     }

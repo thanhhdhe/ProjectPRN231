@@ -11,7 +11,6 @@ namespace OnlineShop.Application.Order.Command
 {
     public class CreateOrderCommand : IRequest<int>
     {
-        public decimal TotalAmount { get; set; }
         public List<OrderItemDTO> Items { get; set; }
     }
 }
