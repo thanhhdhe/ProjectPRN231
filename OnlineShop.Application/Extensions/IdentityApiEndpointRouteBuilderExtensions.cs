@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http.Metadata;
@@ -18,7 +19,9 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OnlineShop.Application.Auth.Command.Register;
+using OnlineShop.Domain.Constants;
 using OnlineShop.Domain.Entities;
+using OnlineShop.Domain.Repositories;
 
 namespace Microsoft.AspNetCore.Routing;
 
@@ -57,7 +60,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions
         // NOTE: We cannot inject UserManager<TUser> directly because the TUser generic parameter is currently unsupported by RDG.
         // https://github.com/dotnet/aspnetcore/issues/47338
         routeGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>>
-            ([FromBody] RegisterCommand registration, HttpContext context, [FromServices] IServiceProvider sp) =>
+     ([FromBody] RegisterCommand registration, HttpContext context, [FromServices] IServiceProvider sp) =>
         {
             var userManager = sp.GetRequiredService<UserManager<TUser>>();
 
@@ -80,7 +83,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions
                 Email = registration.Email,
                 FirstName = registration.FirstName,
                 LastName = registration.LastName,
-                PhoneNumber = registration.PhoneNumber
+                PhoneNumber = registration.PhoneNumber,
             };
             await userStore.SetUserNameAsync(user, email, CancellationToken.None);
             await emailStore.SetEmailAsync(user, email, CancellationToken.None);
@@ -91,9 +94,21 @@ public static class IdentityApiEndpointRouteBuilderExtensions
                 return CreateValidationProblem(result);
             }
 
+            // Assign a role to the user
+            var roleResult = await userManager.AddToRoleAsync(user, UserRoles.Customer);
+            if (!roleResult.Succeeded)
+            {
+                return CreateValidationProblem(roleResult);
+            }
+
+            // Create a cart for the user
+            var cartService = sp.GetRequiredService<ICartRepository>(); // Ensure ICartService is registered in your DI container
+            await cartService.CreateCartForUserAsync(user.Id);
+
             await SendConfirmationEmailAsync(user, userManager, context, email);
             return TypedResults.Ok();
         });
+
 
         routeGroup.MapPost("/login", async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>>
             ([FromBody] LoginRequest login, [FromQuery] bool? useCookies, [FromQuery] bool? useSessionCookies, [FromServices] IServiceProvider sp) =>

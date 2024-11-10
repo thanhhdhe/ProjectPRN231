@@ -13,6 +13,10 @@ namespace OnlineShop.Application.Users.DTO
         public UserProfile()
         {
             CreateMap<User, UserProfileDTO>();
+                //.ForMember(dest => dest.DateOfBirth,
+                //           opt => opt.MapFrom(src => src.DateOfBirth.HasValue
+                //                                      ? DateOnly.FromDateTime(src.DateOfBirth.Value)
+                //                                      : (DateOnly?)null));
         }
     }
 }
