@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineShop.Application.Email;
+using OnlineShop.Application.PaymentService;
 using OnlineShop.Application.Products;
 using OnlineShop.Application.Users;
 using OnlineShop.Domain.Entities;
@@ -27,6 +28,7 @@ namespace OnlineShop.Application.Extensions
             //services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IUserContext, UserContext>();
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IVNPay, VNPay>();
             services.AddHttpContextAccessor();
         }
     }

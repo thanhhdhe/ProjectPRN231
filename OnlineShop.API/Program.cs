@@ -54,6 +54,7 @@ builder.Services.AddOpenApiDocument(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
+builder.Services.AddHttpClient();
 var app = builder.Build();
 
 var scope = app.Services.CreateScope();
