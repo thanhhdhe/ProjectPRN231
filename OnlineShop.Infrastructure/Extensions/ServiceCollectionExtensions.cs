@@ -36,5 +36,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAddressRepository, AddressRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<ICartItemRepository, CartItemRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
     }
 }
