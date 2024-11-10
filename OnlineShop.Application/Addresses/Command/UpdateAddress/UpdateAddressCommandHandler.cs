@@ -1,33 +1,31 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
+using OnlineShop.Application.Reviews.Command.DeleteReview;
 using OnlineShop.Application.Users;
+using OnlineShop.Domain.Entities;
+using OnlineShop.Domain.Exceptions;
 using OnlineShop.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OnlineShop.Application.Addresses.Command.UpdateAddress
+public class DeleteReviewCommandHandler(IReviewRepository reviewRepository,
+        IUserContext userContext) : IRequestHandler<DeleteReviewCommand>
 {
-    public class UpdateAddressCommandHandler(IAddressRepository addressRepository,
-        IMapper mapper,
-        IUserContext userContext) : IRequestHandler<UpdateAddressCommand>
+    public async Task<Unit> Handle(DeleteReviewCommand request, CancellationToken cancellationToken)
     {
-        public async Task Handle(UpdateAddressCommand request, CancellationToken cancellationToken)
+        var review = await reviewRepository.GetReviewByIdAsync(request.Id);
+        if (review == null)
         {
-            var address = await addressRepository.GetAddressByIdAsync(request.Id);
-            if (address == null) {
-                throw new Exception("Address not found");
-            }
-            var user =  userContext.GetCurrentUser();
-            // check if the address belongs to the user
-            if (address.CustomerId != user.Id)
-            {
-                throw new Exception("Address not found");
-            }
-            mapper.Map(request, address);
-            await addressRepository.UpdateAddressAsync(address);
+            throw new NotFoundException(nameof(Review), request.Id.ToString());
         }
+        var user = userContext.GetCurrentUser();
+        if (review.CustomerId != user.Id)
+        {
+            throw new UnauthorizedAccessException("You can only delete your own reviews.");
+        }
+        await reviewRepository.DeleteReviewAsync(review);
+        return Unit.Value;
+    }
+
+    Task IRequestHandler<DeleteReviewCommand>.Handle(DeleteReviewCommand request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }
