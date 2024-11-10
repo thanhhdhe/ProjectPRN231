@@ -23,7 +23,6 @@ namespace OnlineShop.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] GetAllProductQuery query)
         {
             var products = await _mediator.Send(query);
