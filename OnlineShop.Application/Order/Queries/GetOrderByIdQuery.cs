@@ -1,0 +1,16 @@
+﻿using MediatR;
+using OnlineShop.Application.OrderDetail.DTO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace OnlineShop.Application.Order.Queries
+{
+    public class GetOrderByIdQuery : IRequest<OrderDetailDTO>
+    {
+        public int OrderId { get; set; }
+    }
+
+}

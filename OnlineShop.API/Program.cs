@@ -39,6 +39,7 @@ builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>(); /
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>(); // Replace with your actual implementation
 builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IMessageHub, ChatHub>();
 // Add Swagger/OpenAPI support
 builder.Services.AddOpenApiDocument(options =>
