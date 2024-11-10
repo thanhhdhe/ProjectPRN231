@@ -12,7 +12,7 @@ namespace OnlineShop.Application.Products.Command.CreateProduct
     {
         public CreateProductCommandValidator()
         {
-            RuleFor(x => x.ProductName).NotEmpty().MaximumLength(100).MinimumLength(5);
+            RuleFor(x => x.Name).NotEmpty().MaximumLength(100).MinimumLength(5);
         }
     }
 }
