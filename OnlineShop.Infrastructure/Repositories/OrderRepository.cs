@@ -51,9 +51,15 @@ namespace OnlineShop.Infrastructure.Repositories
             var order = await _context.Orders.FindAsync(id);
             if (order != null)
             {
-                order.Status = "Canceled"; // Update status to "Canceled"
+                order.Status = "Canceled";
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task UpdateAsync(Order order)
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
         }
     }
 

@@ -25,11 +25,11 @@ namespace OnlineShop.Application.Products.Command.CreateProduct
 
         public async Task<long> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            // Mapping the CreateProductCommand to Product entity
             var productEntity = _mapper.Map<Product>(request);
 
-            // Ensure the created entity is added to the repository and return the ID
-            return await _productRepository.AddAsync(productEntity);
+            var productId = await _productRepository.AddAsync(productEntity);
+
+            return productId;
         }
     }
 }

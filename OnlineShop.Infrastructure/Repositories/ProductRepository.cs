@@ -46,7 +46,7 @@ namespace OnlineShop.Infrastructure.Repositories
     SortDirection sortDirection
 )
         {
-            var query = _context.Products.Include(p => p.ProductVariants)
+            var query = _context.Products.Include(p => p.ProductVariants).Include(p=>p.Category)
                                          .Where(p => p.IsDeleted != true);
 
             // Apply search filters on Name and Description
@@ -66,8 +66,8 @@ namespace OnlineShop.Infrastructure.Repositories
             {
                 query = query.Where(p => p.ProductVariants
                                           .Any(v =>
-                                                (!minPrice.HasValue || v.SalePrice >= minPrice) &&
-                                                (!maxPrice.HasValue || v.SalePrice <= maxPrice)));
+                                                (!minPrice.HasValue || v.Price >= minPrice) &&
+                                                (!maxPrice.HasValue || v.Price <= maxPrice)));
             }
 
             // Sorting

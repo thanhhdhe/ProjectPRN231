@@ -40,7 +40,7 @@ namespace OnlineShop.API.Controllers
         public async Task<IActionResult> Create([FromBody] CreateProductCommand command)
         {
             var id = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetById), new { id }, null);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
        /* [HttpPut("{id}")]

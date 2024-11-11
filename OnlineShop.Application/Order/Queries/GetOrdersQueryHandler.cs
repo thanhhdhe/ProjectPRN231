@@ -31,7 +31,7 @@ namespace OnlineShop.Application.Order.Queries
             var userId = currentUser.Id;
             var roles = currentUser.Roles;  // Get roles from token (if needed)
 
-            var orders = await _orderRepository.GetAllOrdersAsync(userId, roles.Contains("Admin"));
+            var orders = await _orderRepository.GetAllOrdersAsync(userId, roles.Contains("Admin")|| roles.Contains("Sale"));
             return _mapper.Map<IEnumerable<OrderDTO>>(orders);
         }
     }

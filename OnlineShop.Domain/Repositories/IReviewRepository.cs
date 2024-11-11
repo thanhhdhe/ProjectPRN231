@@ -11,6 +11,7 @@ namespace OnlineShop.Domain.Repositories
     {
         Task<int> AddReviewAsync(Review review);
         Task<IEnumerable<Review>> GetReviewsByProductIdAsync(int productId);
+        Task<IEnumerable<Review>> GetReviews();
         Task<Review> GetReviewByIdAsync(int reviewId);
         Task UpdateReviewAsync(Review review);
         Task DeleteReviewAsync(Review review);

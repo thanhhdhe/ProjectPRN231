@@ -23,6 +23,14 @@ namespace OnlineShop.API.Controllers
             var users = await _mediator.Send(new GetUserProfileQuery());
             return Ok(users);
         }
+
+        [HttpGet("role")]
+        public async Task<IActionResult> GetRole()
+        {
+            var users = await _mediator.Send(new GetUserRoleQuery());
+            return Ok(users);
+        }
+
         [HttpPatch("profile")]
         [Authorize]
         public async Task<IActionResult> UpdateUserDetails(UpdateUserDetailsCommand command)

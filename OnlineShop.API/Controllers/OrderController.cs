@@ -57,5 +57,14 @@ namespace OnlineShop.API.Controllers
             await _mediator.Send(command);
             return NoContent();
         }
+
+        // [PUT] /api/orders/{id}/cancel
+        [HttpPut("{id}/{status}")]
+        public async Task<IActionResult> UpdateStatusOrder(int id, string status)
+        {
+            var command = new UpdateOrderStatusCommand { OrderId = id, NewStatus = status };
+            await _mediator.Send(command);
+            return NoContent();
+        }
     }
 }

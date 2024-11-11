@@ -59,9 +59,10 @@ var app = builder.Build();
 
 app.UseCors(builder =>
 {
-    builder.AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader();
+    builder.WithOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:3001") // Danh sách các nguồn cho phép
+           .AllowAnyMethod()
+           .AllowAnyHeader()
+           .AllowCredentials();
 });
 
 var scope = app.Services.CreateScope();

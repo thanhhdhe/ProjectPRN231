@@ -13,6 +13,8 @@ namespace OnlineShop.Application.Categories.Command.CreateCategory
     {
         public string Name { get; set; }
         public string? Description { get; set; }
+
+        public int? ParentId { get; set; }
     }
 
     
