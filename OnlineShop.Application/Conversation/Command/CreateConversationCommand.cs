@@ -10,8 +10,8 @@ namespace OnlineShop.Application.Conversation.Command
 {
     public class CreateConversationCommand : IRequest<int>
     {
-        public int CustomerId { get; set; }
-        public int StaffId { get; set; }
+        public string CustomerId { get; set; }
+        public string StaffId { get; set; }
         public string Subject { get; set; }
     }
 

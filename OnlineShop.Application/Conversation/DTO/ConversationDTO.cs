@@ -9,8 +9,8 @@ namespace OnlineShop.Application.Conversation.DTO
     public class ConversationDTO
     {
         public int Id { get; set; }
-        public int CustomerId { get; set; }
-        public int StaffId { get; set; }
+        public string CustomerId { get; set; }
+        public string StaffId { get; set; }
         public string Subject { get; set; }
         public DateTime CreatedAt { get; set; }
     }
