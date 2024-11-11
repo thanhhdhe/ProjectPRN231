@@ -12,6 +12,7 @@ namespace OnlineShop.Domain.Repositories
         Task<int> AddCartItemAsync(CartItem cartItem);
         Task DeleteCartItemAsync(CartItem cartItem);
         Task<CartItem> GetCartItemByCartIdAndProductVariantIdAsync(int id, int productVariantId);
+        Task<CartItem> GetCartItemByIdAsync(int cartItemId);
         Task<IEnumerable<CartItem>> GetCartItemsByCartIdAsync(int id);
         Task UpdateCartItemAsync(CartItem cartItemInCart);
     }

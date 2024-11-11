@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using OnlineShop.Application.Products.Command.CreateProduct;
+using OnlineShop.Application.ProductVariant.DTO;
 using OnlineShop.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,13 @@ namespace OnlineShop.Application.Products.DTO
                 .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
                 .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.UpdatedAt));
-            CreateMap<Product, ProductDTO>();
+            CreateMap<Product, ProductDTO>()
+                .ForMember(dest => dest.ProductVariantDTOs, opt => opt.MapFrom(src => src.ProductVariants))
+                //Mapp Price of the first ProductVariant to Price of ProductDTO
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.ProductVariants.FirstOrDefault().Price))
+                .ForMember(dest => dest.SalePrice, opt => opt.MapFrom(src => src.ProductVariants.FirstOrDefault().SalePrice));
+
+
         }
     }
 }

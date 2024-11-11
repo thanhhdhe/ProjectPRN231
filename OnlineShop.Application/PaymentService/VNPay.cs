@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using OnlineShop.Application.Order.DTO;
+using OnlineShop.Application.PaymentService.DTO;
+using OnlineShop.Domain.Entities;
+using OnlineShop.Domain.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,19 +19,21 @@ namespace OnlineShop.Application.PaymentService
         private readonly string vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
+        private readonly IPaymentRepository _paymentRepository;
 
 
-        public VNPay(IConfiguration configuration, HttpClient httpClient)
+        public VNPay(IConfiguration configuration, HttpClient httpClient, IPaymentRepository paymentRepository)
         {
             _configuration = configuration;
             _httpClient = httpClient;
             vnp_HashSecret = "ADYDJFZ2D6KX1RLSOLCORUETMITPGZVP";
             vnp_TmnCode = "89Y46QJJ";
+            _paymentRepository = paymentRepository;
         }
 
         private readonly string vnp_HashSecret;
         private readonly string vnp_TmnCode;
-        public string CreatePaymentUrl(OrderDTO order, string returnUrl)
+        public async Task<string> CreatePaymentUrl(PaymentCreateDTO order, string returnUrl)
         {
             //var orderType = 250000;
             //string data = $"{order.OrderId}|2.1.0|pay|{vnp_TmnCode}|{order.OrderId}|{order.OrderDate:yyyyMMddHHmmss}|{order.OrderDate:yyyyMMddHHmmss}|{"127.0.0.1"}|Thanh toan don hang: {order.OrderId}";
@@ -36,29 +41,38 @@ namespace OnlineShop.Application.PaymentService
             //var ExpireDate = order.OrderDate.AddMinutes(15).ToString("yyyyMMddHHmmss");
             //string checksum = Utils.HmacSHA512(vnp_HashSecret, data);
             //decimal convertMoney = order.TotalAmount * 25000;
-            returnUrl = "https://google.com.vn";
 
             var vnPay = new VNPayLibrary();
 
-            vnPay.AddRequestData("vnp_Amount", ((int)order.TotalAmount * 100000).ToString());
+            vnPay.AddRequestData("vnp_Amount", (((int)order.Amount)*100).ToString());
             vnPay.AddRequestData("vnp_Command", "pay");
             vnPay.AddRequestData("vnp_CreateDate", order.CreatedAt.ToString("yyyyMMddHHmmss"));
             vnPay.AddRequestData("vnp_CurrCode", "VND");
             vnPay.AddRequestData("vnp_IpAddr", "127.0.0.1");
             vnPay.AddRequestData("vnp_Locale", "vn");
-            vnPay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang: {order.Id}");
+            vnPay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang: {order.OrderId}");
             vnPay.AddRequestData("vnp_OrderType", "other");
             vnPay.AddRequestData("vnp_ReturnUrl", returnUrl);
             vnPay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
-            vnPay.AddRequestData("vnp_TxnRef", order.Id.ToString());
+            vnPay.AddRequestData("vnp_TxnRef", order.OrderId.ToString());
             vnPay.AddRequestData("vnp_Version", "2.1.0");
             /*vnPay.AddRequestData("vnp_Amount", convertMoney.ToString());*/
-
             string paymentUrl = vnPay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+            // save to payment detail with status pending to database
+            var payment = new PaymentDetail
+            {
+                OrderId = order.OrderId,
+                Amount = order.Amount,
+                Provider = "VNPay",
+                Status = "Pending",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+            await _paymentRepository.CreatePaymentAsync(payment);
             return paymentUrl;
 
         }
-        public string CreatePayment(OrderDTO order, string returnUrl)
+        public string CreatePayment(PaymentCreateDTO order, string returnUrl)
         {
             //var orderType = 250000;
             //string data = $"{order.OrderId}|2.1.0|pay|{vnp_TmnCode}|{order.OrderId}|{order.OrderDate:yyyyMMddHHmmss}|{order.OrderDate:yyyyMMddHHmmss}|{"127.0.0.1"}|Thanh toan don hang: {order.OrderId}";
@@ -69,7 +83,7 @@ namespace OnlineShop.Application.PaymentService
             returnUrl = "https://dss-api.azurewebsites.net/api/Payment/PaymentReturn-VNPAY";
 
             var vnPay = new VNPayLibrary();
-            var amount = (long)Math.Round(order.TotalAmount * 2300000);
+            var amount = (long)Math.Round(order.Amount * 2300000);
 
             vnPay.AddRequestData("vnp_Amount", (amount).ToString());
             vnPay.AddRequestData("vnp_Command", "pay");
@@ -77,11 +91,11 @@ namespace OnlineShop.Application.PaymentService
             vnPay.AddRequestData("vnp_CurrCode", "VND");
             vnPay.AddRequestData("vnp_IpAddr", "127.0.0.1");
             vnPay.AddRequestData("vnp_Locale", "vn");
-            vnPay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang: {order.Id}");
+            vnPay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang: {order.OrderId}");
             vnPay.AddRequestData("vnp_OrderType", "other");
             vnPay.AddRequestData("vnp_ReturnUrl", returnUrl);
             vnPay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
-            vnPay.AddRequestData("vnp_TxnRef", order.Id.ToString());
+            vnPay.AddRequestData("vnp_TxnRef", order.OrderId.ToString());
             vnPay.AddRequestData("vnp_Version", "2.1.0");
             /*vnPay.AddRequestData("vnp_Amount", convertMoney.ToString());*/
 
@@ -124,6 +138,11 @@ namespace OnlineShop.Application.PaymentService
             return response.Split('&')
                            .Select(part => part.Split('='))
                            .ToDictionary(split => split[0], split => split[1]);
+        }
+
+        public string CreatePayment(OrderDTO order, string returnUrl)
+        {
+            throw new NotImplementedException();
         }
 
         public class VnpayRefundRequest

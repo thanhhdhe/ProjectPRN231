@@ -24,11 +24,11 @@ namespace OnlineShop.API.Controllers
 
         // [POST] /api/orders
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderCommand command)
+        public async Task<int> CreateOrder([FromBody] CreateOrderCommand command)
         {
             // No need to pass UserId here; it's handled in the handler
             var orderId = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetOrderById), new { id = orderId }, null);
+            return orderId;
         }
 
         // [GET] /api/orders

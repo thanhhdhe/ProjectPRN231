@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Application.Carts.Command.AddToCart;
 using OnlineShop.Application.Carts.Command.DeleteCartItem;
+using OnlineShop.Application.Carts.Command.UpdateToCart;
 using OnlineShop.Application.Carts.Queries.GetCartItems;
 
 namespace OnlineShop.API.Controllers
@@ -29,12 +30,12 @@ namespace OnlineShop.API.Controllers
             var cartItems = await mediator.Send(new GetCartItemsQuery());
             return Ok(cartItems);
         }
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateCartItem(int id, UpdateCartItemCommand command)
-        //{
-        //    command.Id = id;
-        //    await mediator.Send(command);
-        //    return NoContent();
-        //}
+        [HttpPost("{id}")]
+        public async Task<IActionResult> UpdateCartItem(int id, UpdateCartCommand command)
+        {
+            command.ProductVariantId = id;
+            await mediator.Send(command);
+            return NoContent();
+        }
     }
 }

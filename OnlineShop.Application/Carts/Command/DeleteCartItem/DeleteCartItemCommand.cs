@@ -9,6 +9,6 @@ namespace OnlineShop.Application.Carts.Command.DeleteCartItem
 {
     public class DeleteCartItemCommand(int id) : IRequest
     {
-        public int ProductVariantId { get; } = id;
+        public int CartItemId { get; } = id;
     }
 }

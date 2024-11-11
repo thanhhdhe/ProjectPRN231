@@ -10,6 +10,7 @@ namespace OnlineShop.Application.Reviews.DTO
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
+        public string CustomerName { get; set; }    
         public string CustomerId { get; set; }
         public int Rating { get; set; }
         public string Comment { get; set; }

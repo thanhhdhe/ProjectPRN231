@@ -33,10 +33,10 @@ namespace OnlineShop.Application.Carts.Command.DeleteCartItem
             {
                 throw new NotFoundException(nameof(Cart), user.Id);
             }
-            var cartItem = await cartItemRepository.GetCartItemByCartIdAndProductVariantIdAsync( cart.Id,request.ProductVariantId);
+            var cartItem = await cartItemRepository.GetCartItemByIdAsync(request.CartItemId);
             if (cartItem == null)
             {
-                throw new NotFoundException(nameof(CartItem), request.ProductVariantId.ToString());
+                throw new NotFoundException(nameof(CartItem), request.CartItemId.ToString());
             }
             if (cartItem.CartId != cart.Id)
             {

@@ -16,7 +16,8 @@ namespace OnlineShop.Application.Reviews.DTO
         {
             CreateMap<CreateReviewCommand, Review>();
             CreateMap<UpdateReviewCommand, Review>();
-            CreateMap<Review, ReviewDTO>();
+            CreateMap<Review, ReviewDTO>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FirstName + " " + src.Customer.LastName));
         }
     }
 }

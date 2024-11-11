@@ -27,7 +27,19 @@ namespace OnlineShop.Infrastructure.Repositories
 
         public async Task<CartItem> GetCartItemByCartIdAndProductVariantIdAsync(int id, int productVariantId)
         {
-            var cartItem = await context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == id && ci.ProductVariantId == productVariantId);
+            var cartItem = await context.CartItems
+                .Include(ci => ci.ProductVariant)
+                .ThenInclude(pv => pv.ProductImages)
+                .FirstOrDefaultAsync(ci => ci.CartId == id && ci.ProductVariantId == productVariantId);
+            return cartItem;
+        }
+
+        public async Task<CartItem> GetCartItemByIdAsync(int cartItemId)
+        {
+            var cartItem = await context.CartItems
+                .Include(ci => ci.ProductVariant)
+                .ThenInclude(pv => pv.ProductImages)
+                .FirstOrDefaultAsync(ci => ci.Id == cartItemId);
             return cartItem;
         }
 
@@ -36,6 +48,8 @@ namespace OnlineShop.Infrastructure.Repositories
             var cartItems = context.CartItems
                 .Include(ci => ci.ProductVariant)
                 .ThenInclude(pv => pv.Product)
+                .Include(ci => ci.ProductVariant)
+                .ThenInclude(pv => pv.ProductImages)
                 .Where(ci => ci.CartId == id).ToListAsync();
             return await cartItems;
         }

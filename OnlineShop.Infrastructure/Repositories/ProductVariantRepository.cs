@@ -28,7 +28,10 @@ namespace OnlineShop.Infrastructure.Repositories
 
         public async Task<ProductVariant?> GetByIdAsync(int id)
         {
-            return await _context.ProductVariants.FindAsync(id);
+            //return the Productvarient incule ProductImage of this
+            return await _context.ProductVariants
+                                 .Include(v => v.ProductImages)
+                                 .FirstOrDefaultAsync(v => v.Id == id);
         }
 
         public async Task UpdateAsync(ProductVariant variant)
@@ -50,6 +53,7 @@ namespace OnlineShop.Infrastructure.Repositories
         public async Task<IEnumerable<ProductVariant>> GetByProductIdAsync(int productId)
         {
             return await _context.ProductVariants
+                .Include(v => v.ProductImages)
                                  .Where(v => v.ProductId == productId && v.IsDeleted != true)
                                  .ToListAsync();
         }
