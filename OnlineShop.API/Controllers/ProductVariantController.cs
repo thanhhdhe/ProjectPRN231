@@ -1,7 +1,9 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 using OnlineShop.Application.ProductVariant.Command;
+using OnlineShop.Application.ProductVariant.DTO;
 using OnlineShop.Application.ProductVariant.Queries;
 
 namespace OnlineShop.API.Controllers
@@ -17,11 +19,25 @@ namespace OnlineShop.API.Controllers
             _mediator = mediator;
         }
 
+        // GET: api/products/{productId}/variants
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ProductVariantDTO>>> GetVariantsByProductId(int productId)
+        {
+            var query = new GetAllVariantsByProductIdQuery(productId);
+            var variants = await _mediator.Send(query);
+
+            if (variants == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(variants);
+        }
+
         // GET: api/products/{productId}/variants/{id}
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int productId, int id)
         {
-            // Truyền cả productId và id vào query
             var variant = await _mediator.Send(new GetVariantByIdQuery(id));
             return variant is not null ? Ok(variant) : NotFound();
         }
@@ -30,13 +46,8 @@ namespace OnlineShop.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(int productId, [FromBody] CreateVariantCommand command)
         {
-            // Đảm bảo rằng ProductId được gán vào command trước khi gửi tới handler
             command.ProductId = productId;
-
-            // Gửi yêu cầu tạo variant
             var id = await _mediator.Send(command);
-
-            // Trả về HTTP 201 Created với đường dẫn tới resource mới được tạo
             return CreatedAtAction(nameof(GetById), new { productId = command.ProductId, id }, null);
         }
 
@@ -45,7 +56,6 @@ namespace OnlineShop.API.Controllers
         public async Task<IActionResult> Update(int productId, int id, [FromBody] UpdateVariantCommand command)
         {
             command.Id = id;
-
             await _mediator.Send(command);
             return NoContent();
         }
@@ -54,7 +64,6 @@ namespace OnlineShop.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int productId, int id)
         {
-            // Gửi yêu cầu xóa variant
             await _mediator.Send(new DeleteVariantCommand { Id = id });
             return NoContent();
         }
