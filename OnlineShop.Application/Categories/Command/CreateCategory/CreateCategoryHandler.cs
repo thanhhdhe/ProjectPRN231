@@ -20,7 +20,7 @@ namespace OnlineShop.Application.Categories.Command.CreateCategory
 
         public async Task<int> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
-            var category = new Category { Name = request.Name, Description = request.Description };
+            var category = new Category { Name = request.Name, Description = request.Description , ParentId = request.ParentId };
             await _categoryRepository.AddAsync(category);
             return category.Id;
         }

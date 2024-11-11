@@ -33,6 +33,13 @@ namespace OnlineShop.API.Controllers
             return Ok(reviews);
         }
 
+        [HttpGet("")]
+        public async Task<IActionResult> GetReviews()
+        {
+            var reviews = await _mediator.Send(new GetReviewsQuery());
+            return Ok(reviews);
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateReview(int id, [FromBody] UpdateReviewCommand command)
         {

@@ -26,6 +26,11 @@ namespace OnlineShop.Infrastructure.Repositories
             return review.Id;
         }
 
+        public async Task<IEnumerable<Review>> GetReviews()
+        {
+            return await _context.Reviews.ToListAsync();
+        }
+
         public async Task<IEnumerable<Review>> GetReviewsByProductIdAsync(int productId)
         {
             return await _context.Reviews.Where(r => r.ProductId == productId).ToListAsync();
