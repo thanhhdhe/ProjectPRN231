@@ -13,7 +13,7 @@ namespace OnlineShop.Application.Message.Command
     public class SendMessageHandler : IRequestHandler<SendMessageCommand, Unit>
     {
         private readonly IMessageRepository _messageRepository;
-        private readonly IMessageHub _messageHub;  // Use IMessageHub instead of ChatHub
+        private readonly IMessageHub _messageHub;  
 
         public SendMessageHandler(IMessageRepository messageRepository, IMessageHub messageHub)
         {

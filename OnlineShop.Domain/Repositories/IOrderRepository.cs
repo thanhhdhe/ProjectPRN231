@@ -13,6 +13,8 @@ namespace OnlineShop.Domain.Repositories
         Task<IEnumerable<Order>> GetAllOrdersAsync(string userId, bool isAdmin);
         Task<Order?> GetByIdAsync(int id);
         Task CancelOrderAsync(int id);
+
+        Task UpdateAsync(Order order);
     }
 
 }
