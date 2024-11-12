@@ -39,6 +39,10 @@ namespace OnlineShop.Infrastructure.Repositories
         {
             return await _context.Orders
                                  .Include(o => o.OrderItems)
+                                 .ThenInclude(oi => oi.ProductVariant)
+                                 .ThenInclude(pv => pv.Product)
+                                 .ThenInclude(p => p.Category)
+                                 .Include(o => o.Customer)
                                  .FirstOrDefaultAsync(o => o.Id == id);
         }
 

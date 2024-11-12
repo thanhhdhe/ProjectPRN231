@@ -101,7 +101,8 @@ namespace OnlineShop.Infrastructure.Repositories
 
         public async Task<Product> GetByIdAsync(long id)
         {
-            var products = await _context.Products
+            var products = await _context.Products.Include(p => p.ProductVariants)
+                .ThenInclude(pv => pv.ProductImages)
                 .FirstOrDefaultAsync(y =>
                 y.Id == id);
             return products;

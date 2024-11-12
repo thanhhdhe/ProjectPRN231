@@ -1,4 +1,5 @@
 ﻿using OnlineShop.Application.Order.DTO;
+using OnlineShop.Application.PaymentService.DTO;
 using OnlineShop.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace OnlineShop.Application.PaymentService
 {
     public interface IVNPay
     {
-        string CreatePaymentUrl(OrderDTO order, string returnUrl);
+        Task<string> CreatePaymentUrl(PaymentCreateDTO order, string returnUrl);
         public string CreatePayment(OrderDTO order, string returnUrl);
         bool ValidateSignature(string queryString, string vnp_HashSecret);
         Task<HttpResponseMessage> SendRefundRequestAsync(VnpayRefundRequest request, string url);

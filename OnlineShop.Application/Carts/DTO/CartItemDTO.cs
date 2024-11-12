@@ -14,6 +14,7 @@ namespace OnlineShop.Application.Carts.DTO
         public string ProductName { get; set; }
         public int ProductVariantId { get; set; }
         public string Attributes { get; set; }
+        public string Image { get; set; }
         public decimal Price { get; set; }
         public decimal? SalePrice { get; set; }
         public int Quantity { get; set; }

@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Application.Order.DTO;
 using OnlineShop.Application.PaymentService;
+using OnlineShop.Application.PaymentService.DTO;
 using OnlineShop.Domain.Entities;
+using OnlineShop.Domain.Repositories;
 using static OnlineShop.Application.PaymentService.VNPay;
 
 namespace OnlineShop.API.Controllers
@@ -12,17 +14,19 @@ namespace OnlineShop.API.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IVNPay _vnpay;
+        private readonly IPaymentRepository _pa;
 
-        public PaymentController(IVNPay vnpay)
+        public PaymentController(IVNPay vnpay, IPaymentRepository paymentRepository)
         {
             _vnpay = vnpay;
+            _pa = paymentRepository;
         }
 
         [HttpPost("create-payment-url")]
-        public IActionResult CreatePaymentUrl([FromBody] OrderDTO order)
+        public async Task<IActionResult> CreatePaymentUrl([FromBody] PaymentCreateDTO order)
         {
-            string returnUrl = "https://yourwebsite.com/payment-result";
-            string paymentUrl = _vnpay.CreatePaymentUrl(order, returnUrl);
+            string returnUrl = "http://localhost:3001/payment/vnpay-return";
+            string paymentUrl = await _vnpay.CreatePaymentUrl(order, returnUrl);
             return Ok(new { paymentUrl });
         }
 
@@ -32,6 +36,22 @@ namespace OnlineShop.API.Controllers
             string returnUrl = "https://yourwebsite.com/payment-result";
             string paymentUrl = _vnpay.CreatePayment(order, returnUrl);
             return Ok(new { paymentUrl });
+        }
+        //Upadate status payment
+        [HttpPost("update-status")]
+        public async Task<IActionResult> UpdateStatus([FromBody] PaymentCreateDTO paymentDetail)
+        {
+            // mapping paymentDetail to PaymentDetail entity
+            var p = new PaymentDetail
+            {
+                OrderId = paymentDetail.OrderId,
+                Status = paymentDetail.Status,
+                Amount = paymentDetail.Amount,
+                //CreatedAt = paymentDetail.CreatedAt,
+                UpdatedAt = paymentDetail.UpdatedAt
+            };
+            await _pa.UpdatePaymentAsync(p.OrderId,p.Status);
+            return Ok();
         }
 
         [HttpGet("validate-signature")]

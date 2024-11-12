@@ -39,6 +39,12 @@ namespace OnlineShop.Application.Order.Command
                 Status = "Pending",
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
+                ReceiverName = request.ReceiverName,
+                PhoneNumber = request.PhoneNumber,
+                AddressDetail = request.AddressDetail,
+                Ward = request.Ward,
+                District = request.District,
+                City = request.City,
                 OrderItems = request.Items.Select(item => new OrderItem
                 {
                     ProductVariantId = item.ProductId,
