@@ -21,7 +21,14 @@ namespace OnlineShop.Infrastructure.Repositories
 
         public async Task<int> CreateAsync(Order order)
         {
+            //change quantity of product variant 
+            
             _context.Orders.Add(order);
+            foreach (var item in order.OrderItems)
+            {
+                var productVariant = await _context.ProductVariants.FindAsync(item.ProductVariantId);
+                productVariant.Quantity -= item.Quantity;
+            }
             await _context.SaveChangesAsync();
             return order.Id;
         }

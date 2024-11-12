@@ -25,7 +25,7 @@ namespace OnlineShop.API.Controllers
         [HttpPost("create-payment-url")]
         public async Task<IActionResult> CreatePaymentUrl([FromBody] PaymentCreateDTO order)
         {
-            string returnUrl = "http://localhost:3001/payment/vnpay-return";
+            string returnUrl = "http://localhost:3000/payment/vnpay-return";
             string paymentUrl = await _vnpay.CreatePaymentUrl(order, returnUrl);
             return Ok(new { paymentUrl });
         }
@@ -33,7 +33,7 @@ namespace OnlineShop.API.Controllers
         [HttpPost("create-payment")]
         public IActionResult CreatePayment([FromBody] OrderDTO order)
         {
-            string returnUrl = "https://yourwebsite.com/payment-result";
+            string returnUrl = "http://localhost:3000/payment/vnpay-return";
             string paymentUrl = _vnpay.CreatePayment(order, returnUrl);
             return Ok(new { paymentUrl });
         }
