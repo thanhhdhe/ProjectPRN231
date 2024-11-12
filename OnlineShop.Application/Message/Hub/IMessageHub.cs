@@ -8,7 +8,9 @@ namespace OnlineShop.Application.Message.Hub
 {
     public interface IMessageHub
     {
-        Task SendMessageToGroup(int conversationId, string message);
+        Task SendMessageToGroup(string conversationId, string message);
+        Task JoinConversation(string conversationId);
+        Task LeaveConversation(string conversationId);
     }
 
 }

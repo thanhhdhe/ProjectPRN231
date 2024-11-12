@@ -29,7 +29,18 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<OnlineShopDBContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder
+            .WithOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:3001")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .SetIsOriginAllowed((host) => true); // Chỉ dùng trong development
+    });
+});
 // Add MediatR to the container for handling CQRS requests
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
@@ -57,13 +68,8 @@ builder.Services.AddSignalR();
 builder.Services.AddHttpClient();
 var app = builder.Build();
 
-app.UseCors(builder =>
-{
-    builder.WithOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:3001") // Danh sách các nguồn cho phép
-           .AllowAnyMethod()
-           .AllowAnyHeader()
-           .AllowCredentials();
-});
+app.UseCors("CorsPolicy");
+app.MapHub<ChatHub>("/chathub");
 
 var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<ISeedData>();
@@ -86,5 +92,4 @@ app.MapGroup("api/identity").WithTags("Identity").MapCustomIdentityApi<User>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-app.MapHub<ChatHub>("/chathub");
 app.Run();

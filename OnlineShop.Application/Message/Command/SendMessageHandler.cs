@@ -39,8 +39,8 @@ namespace OnlineShop.Application.Message.Command
 
             await _messageRepository.AddAsync(message);
 
-            // Send message to the conversation group using the interface
-            await _messageHub.SendMessageToGroup(request.ConversationId, request.Content);
+            // Convert to string when sending to SignalR
+            await _messageHub.SendMessageToGroup(request.ConversationId.ToString(), request.Content);
 
             return Unit.Value;
         }
